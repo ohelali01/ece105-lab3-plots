@@ -10,6 +10,7 @@ Usage
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def generate_data(seed):
@@ -143,3 +144,33 @@ def plot_boxplot(sensor_a, sensor_b, ax):
     ax.set_ylabel("Temperature (deg C)")
     ax.set_title("Sensor Temperature Distribution Comparison")
     ax.legend()
+
+# Create main() that generates data, creates a 1x3 subplot figure,
+# calls each plot function, adjusts layout, and saves as sensor_analysis.png
+# at 150 DPI with tight bounding box.
+def main():
+    """Generate sensor data and save a three-panel analysis figure.
+
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    None
+        This function creates and saves ``sensor_analysis.png``.
+    """
+    sensor_a, sensor_b, timestamps = generate_data(seed=1234)
+    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
+    plot_histogram(sensor_a, sensor_b, axes[1])
+    plot_boxplot(sensor_a, sensor_b, axes[2])
+
+    fig.tight_layout()
+    fig.savefig("sensor_analysis.png", dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+if __name__ == "__main__":
+    main()
