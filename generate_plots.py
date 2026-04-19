@@ -67,3 +67,79 @@ def plot_scatter(sensor_a, sensor_b, timestamps, ax):
     ax.set_ylabel("Temperature (°C)")
     ax.set_title("Sensor Temperature vs Time")
     ax.legend()
+
+# Create plot_histogram(sensor_a, sensor_b, ax) that draws
+# the histogram from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+def plot_histogram(sensor_a, sensor_b, ax):
+    """Plot overlaid temperature histograms for two sensors on an Axes.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Array of Sensor A temperature readings in degrees Celsius.
+    sensor_b : numpy.ndarray
+        Array of Sensor B temperature readings in degrees Celsius.
+    ax : matplotlib.axes.Axes
+        Existing Matplotlib Axes object to modify in place.
+
+    Returns
+    -------
+    None
+        This function modifies ``ax`` directly and does not return a value.
+    """
+    ax.hist(sensor_a, bins=30, alpha=0.5, color="tab:blue", label="Sensor A")
+    ax.hist(sensor_b, bins=30, alpha=0.5, color="tab:orange", label="Sensor B")
+    ax.axvline(
+        sensor_a.mean(),
+        color="tab:blue",
+        linestyle="--",
+        linewidth=2,
+        label="Sensor A mean",
+    )
+    ax.axvline(
+        sensor_b.mean(),
+        color="tab:orange",
+        linestyle="--",
+        linewidth=2,
+        label="Sensor B mean",
+    )
+    ax.set_xlabel("Temperature (°C)")
+    ax.set_ylabel("Count")
+    ax.set_title("Temperature Distributions: Sensor A vs Sensor B")
+    ax.legend()
+
+
+# Create plot_boxplot(sensor_a, sensor_b, ax) that draws
+# the box plot from the notebook onto the given Axes object.
+# NumPy-style docstring. Modifies ax in place, returns None.
+def plot_boxplot(sensor_a, sensor_b, ax):
+    """Plot side-by-side sensor temperature box plots on an existing Axes.
+
+    Parameters
+    ----------
+    sensor_a : numpy.ndarray
+        Array of Sensor A temperature readings in degrees Celsius.
+    sensor_b : numpy.ndarray
+        Array of Sensor B temperature readings in degrees Celsius.
+    ax : matplotlib.axes.Axes
+        Existing Matplotlib Axes object to modify in place.
+
+    Returns
+    -------
+    None
+        This function modifies ``ax`` directly and does not return a value.
+    """
+    ax.boxplot([sensor_a, sensor_b], labels=["Sensor A", "Sensor B"])
+    overall_mean = np.concatenate([sensor_a, sensor_b]).mean()
+    ax.axhline(
+        overall_mean,
+        color="gray",
+        linestyle="--",
+        linewidth=2,
+        label="Overall mean",
+    )
+    ax.set_xlabel("Sensor")
+    ax.set_ylabel("Temperature (deg C)")
+    ax.set_title("Sensor Temperature Distribution Comparison")
+    ax.legend()
