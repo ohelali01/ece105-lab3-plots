@@ -145,11 +145,11 @@ def plot_boxplot(sensor_a, sensor_b, ax):
     ax.set_title("Sensor Temperature Distribution Comparison")
     ax.legend()
 
-# Create main() that generates data, creates a 1x3 subplot figure,
-# calls each plot function, adjusts layout, and saves as sensor_analysis.png
-# at 150 DPI with tight bounding box.
+# Create main() that generates data, creates a 2x2 subplot figure,
+# calls each plot function, adds summary statistics in the fourth panel,
+# adjusts layout, and saves as sensor_analysis.png at 150 DPI.
 def main():
-    """Generate sensor data and save a three-panel analysis figure.
+    """Generate sensor data and save a 2x2 sensor analysis figure.
 
     Parameters
     ----------
@@ -161,11 +161,32 @@ def main():
         This function creates and saves ``sensor_analysis.png``.
     """
     sensor_a, sensor_b, timestamps = generate_data(seed=1234)
-    fig, axes = plt.subplots(1, 3, figsize=(18, 5))
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-    plot_scatter(sensor_a, sensor_b, timestamps, axes[0])
-    plot_histogram(sensor_a, sensor_b, axes[1])
-    plot_boxplot(sensor_a, sensor_b, axes[2])
+    plot_scatter(sensor_a, sensor_b, timestamps, axes[0, 0])
+    plot_histogram(sensor_a, sensor_b, axes[0, 1])
+    plot_boxplot(sensor_a, sensor_b, axes[1, 0])
+
+    summary_ax = axes[1, 1]
+    summary_ax.axis("off")
+    summary_ax.set_title("Summary Statistics")
+
+    summary_text = (
+        f"Sensor A mean: {sensor_a.mean():.2f} °C\n"
+        f"Sensor A std:  {sensor_a.std():.2f} °C\n"
+        f"Sensor B mean: {sensor_b.mean():.2f} °C\n"
+        f"Sensor B std:  {sensor_b.std():.2f} °C\n"
+        f"Mean difference (B-A): {(sensor_b.mean() - sensor_a.mean()):.2f} °C\n"
+        f"Correlation: {np.corrcoef(sensor_a, sensor_b)[0, 1]:.3f}"
+    )
+    summary_ax.text(
+        0.05,
+        0.95,
+        summary_text,
+        transform=summary_ax.transAxes,
+        va="top",
+        fontfamily="monospace",
+    )
 
     fig.tight_layout()
     fig.savefig("sensor_analysis.png", dpi=150, bbox_inches="tight")
@@ -174,3 +195,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
